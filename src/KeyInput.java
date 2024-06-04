@@ -2,12 +2,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyInput extends KeyAdapter {
-    private Player player;
     private Game game;
     private boolean up, down, left, right;
 
     public KeyInput(Player player, Game game) {
-        this.player = player;
         this.game = game;
     }
 

@@ -2,16 +2,11 @@ import java.awt.Canvas;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -31,9 +26,7 @@ public class Game extends Canvas implements Runnable {
     private int score;
     private int weapon;
     private double width = 800, height = 800;
-    private BufferedImage playerTexture;
-    private BufferedImage enemyTexture;
-    private BufferedImage healthPickupTexture;
+
 
     public boolean getRunning() {
         return running;
@@ -59,21 +52,6 @@ public class Game extends Canvas implements Runnable {
         weapon = 1;
         bullets = Collections.synchronizedList(new ArrayList<>());
         enemies = Collections.synchronizedList(new ArrayList<>());
-        loadTextures();
-    }
-
-    private void loadTextures() {
-
-        try {
-            // Загрузка текстуры игрока
-            playerTexture = ImageIO.read(new File("resourse/Wizard.png"));
-            // Загрузка текстуры врагов
-            enemyTexture = ImageIO.read(new File("resourse/tile_0122.png"));
-            // Загрузка текстуры зельки
-            healthPickupTexture = ImageIO.read(new File("resourse/tile_0115.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public synchronized void start() {

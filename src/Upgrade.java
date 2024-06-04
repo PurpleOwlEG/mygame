@@ -1,6 +1,5 @@
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class Upgrade {
     private String name;

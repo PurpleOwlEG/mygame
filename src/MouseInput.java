@@ -8,7 +8,7 @@ public class MouseInput extends MouseAdapter {
     private static Game game;
 
     public MouseInput(Game game) {
-        this.game = game;
+        MouseInput.game = game;
         this.isShooting = false;
     }
 
