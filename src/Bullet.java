@@ -30,22 +30,25 @@ public class Bullet {
     }
 
     public void render(Graphics2D g2d) {
-
-        // Создаем аффинное преобразование для поворота текстуры
+        // Сохраняем текущую трансформацию
         AffineTransform old = g2d.getTransform();
+        // Создаем новую трансформацию для поворота текстуры
         AffineTransform transform = new AffineTransform();
-
+    
         // Поворачиваем текстуру на угол направления
         double angle = Math.atan2(dy, dx);
+        
         transform.rotate(angle, x + bulletTexture.getWidth() / 2, y + bulletTexture.getHeight() / 2);
         g2d.setTransform(transform);
-
+        System.out.println("New Transform: " + transform);
+    
         // Отрисовка текстуры пули
         g2d.drawImage(bulletTexture, (int) x, (int) y, null);
-
-        // Восстанавливаем преобразование
+    
+        // Восстанавливаем исходную трансформацию
         g2d.setTransform(old);
     }
+     
 
     public boolean isOffScreen(int width, int height) {
         return x < 0 || x > width || y < 0 || y > height;

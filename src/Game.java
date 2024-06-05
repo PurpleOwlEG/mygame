@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable {
     private int healthPickupTimer;
     private int score;
     private int weapon;
-    private double width = 800, height = 800;
+    private double width = 600, height = 600;
     private BufferedImage playerTexture;
     private BufferedImage enemyTexture;
     private BufferedImage healthPickupTexture;
