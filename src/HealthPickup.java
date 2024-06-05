@@ -12,7 +12,6 @@ public class HealthPickup {
         this.x = x;
         this.y = y;
         try {
-            // Загрузка текстуры врага
             // Загрузка текстуры зельки
             healthPickupTexture = ImageIO.read(new File("resourse/tile_0115.png"));
         } catch (IOException e) {

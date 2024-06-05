@@ -26,12 +26,13 @@ public class Upgrade {
 
     public static List<Upgrade> getAvailableUpgrades(Player player) {
         List<Upgrade> upgrades = new ArrayList<>();
-        upgrades.add(new Upgrade("Increase Speed", "Increase player's speed by 10%", () -> {
-            player.increaseSpeed(1.1);
+        upgrades.add(new Upgrade("+1% скорости", "Increase player's speed by 1%", () -> {
+            player.increaseSpeed(0.01);
         }));
-        upgrades.add(new Upgrade("Increase Health", "Increase player's health by 20%", () -> {
-            player.increaseHealth(1.2);
+        upgrades.add(new Upgrade("+20% HP", "Increase player's health by 20%", () -> {
+            player.increaseHealth(0.2);
         }));
+
         // Добавьте другие улучшения
         return upgrades;
     }

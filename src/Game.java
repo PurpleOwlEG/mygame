@@ -27,7 +27,6 @@ public class Game extends Canvas implements Runnable {
     private int weapon;
     private double width = 800, height = 800;
 
-
     public boolean getRunning() {
         return running;
     }
@@ -103,6 +102,7 @@ public class Game extends Canvas implements Runnable {
                     enemy.getY() < player.getY() + 32 && enemy.getY() + 32 > player.getY()) {
                 player.takeDamage(10);
                 enemiesToRemove.add(enemy);
+
             }
             // Проверка коллизии с пулями
             for (Bullet bullet : bullets) {
@@ -118,6 +118,9 @@ public class Game extends Canvas implements Runnable {
         }
         bullets.removeAll(bulletsToRemove);
         enemies.removeAll(enemiesToRemove);
+        if (player.getHp() == 0) {
+            resetLevel();
+        }
 
         // Обновление хп-квадратиков
         List<HealthPickup> healthPickupsToRemove = new ArrayList<>();
@@ -132,7 +135,7 @@ public class Game extends Canvas implements Runnable {
 
         // Спавн врагов
         spawnTimer++;
-        if ((spawnTimer > 0) && (enemies.size() < 10)) {
+        if ((spawnTimer > 1000 - player.getLevel() * 10) && enemies.size() < (Math.max((player.getLevel() * 2), 10))) {
             spawnEnemy();
             spawnTimer = 0;
         }
@@ -170,13 +173,15 @@ public class Game extends Canvas implements Runnable {
             pickup.render(g2d);
         }
         // Отображение HP и счётчика убитых врагов
+
         g2d.setColor(Color.BLACK);
         g2d.drawString("HP: " + player.getHp(), 10, 20);
-        g2d.drawString("Score: " + score, 10, 40);
+        g2d.drawString("Убийств: " + score, 10, 40);
         g2d.drawString("Опыт: " + player.getExperience(), 10, 60);
         g2d.drawString("Уровень: " + player.getLevel(), 10, 80);
-        g2d.drawString("хп: " + (int) player.getMaxHp(), 10, 100);
-        g2d.drawString("скорость: " + (int) (100 * player.getSpeed()), 10, 120);
+        g2d.drawString("Множители:", 10, 120);
+        g2d.drawString("Max HP: x" + String.format("%.1f", player.getHpFactor()), 10, 140);
+        g2d.drawString("Max Скорость: x" + String.format("%.2f", player.getSpeedFactor()), 10, 160);
 
         g2d.dispose();
         bs.show();
@@ -214,61 +219,42 @@ public class Game extends Canvas implements Runnable {
         healthPickups.clear();
         score = 0;
         player.heal(ABORT);
+        player.setLevel(0);
     }
 
     public void shootBullet(double mouseX, double mouseY) {
-        Bullet bullet = player.shoot(mouseX, mouseY, weapon);
+        Bullet bullet = player.shoot(mouseX, mouseY);
         if (bullet != null) {
             if (weapon == 1) {
                 bullets.add(bullet);
-            } else if (weapon == 2) {
-                checkLaserCollision((Laser) bullet);
-            }
-        }
-    }
-
-    private void checkLaserCollision(Laser laser) {
-        double lx1 = laser.getX();
-        double ly1 = laser.getY();
-        double lx2 = laser.getTargetX();
-        double ly2 = laser.getTargetY();
-
-        List<Enemy> enemiesToRemove = new ArrayList<>();
-        for (Enemy enemy : enemies) {
-            double ex = enemy.getX() + 16;
-            double ey = enemy.getY() + 16;
-
-            // Проверка столкновения лазера с врагом
-            double distance = Math.abs((ly2 - ly1) * ex - (lx2 - lx1) * ey + lx2 * ly1 - ly2 * lx1) /
-                    Math.sqrt((ly2 - ly1) * (ly2 - ly1) + (lx2 - lx1) * (lx2 - lx1));
-            if (distance < 16) {
-                enemiesToRemove.add(enemy);
-                score++;
 
             }
         }
-        enemies.removeAll(enemiesToRemove);
-        bullets.add(laser);
     }
 
     public void setWeapon(int weapon) {
         this.weapon = weapon;
     }
 
-    public static void increaseEnemyDifficulty() {
-        // Увеличиваем параметры врагов, такие как скорость, количество и т.д.
-        // Enemy.increaseDifficulty();
-    }
-
     public static void showUpgrades(Player player) {
         List<Upgrade> upgrades = Upgrade.getAvailableUpgrades(player);
         String[] options = upgrades.stream().map(Upgrade::getName).toArray(String[]::new);
-        int choice = JOptionPane.showOptionDialog(null, "Choose an upgrade:", "Level Up", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+        int choice = JOptionPane.showOptionDialog(null, "Выберите улучшение:", "Level Up", JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice >= 0 && choice < upgrades.size()) {
             upgrades.get(choice).apply();
         }
     }
+
+    // public static void showRestart(Player player) {
+        
+       
+    //     int choice = JOptionPane.showOptionDialog(null, "Choose an upgrade:", "Level Up", JOptionPane.DEFAULT_OPTION,
+    //             JOptionPane.ERROR_MESSAGE, null,< "игра пер");
+    //     if (choice >= 0 && choice < 1) {
+    //        start();
+    //     }
+    // }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("My Game");

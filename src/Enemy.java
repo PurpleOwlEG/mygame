@@ -17,7 +17,7 @@ public class Enemy {
         this.y = y;
         this.player = player;
         this.baseSpeed = 0.05;
-        this.experienceReward = 50;
+        this.experienceReward = 1000;
 
         try {
             // Загрузка текстуры врага

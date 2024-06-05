@@ -7,22 +7,30 @@ import javax.imageio.ImageIO;
 public class Player {
     private double x, y;
     private double speed;
-    private double hp;
-    private double maxHp;
+    private int hp;
+    private double baseSpeed;
+    private int maxHp;
     private BufferedImage playerTexture;
     private int level;
     private int experience;
     private int nextLevelExperience;
+    private double hpFactor;
+    private double speedFactor;
+    private double baseHp;
 
     public Player(double x, double y) {
         this.x = x;
         this.y = y;
         this.speed = 0.1;
+        this.baseSpeed = 0.1;
         this.maxHp = 100;
         this.hp = maxHp;
+        this.baseHp = 100;
         this.level = 1;
         this.experience = 0;
         this.nextLevelExperience = 100;
+        this.hpFactor = 1;
+        this.speedFactor = 1;
 
         try {
             // Загрузка текстуры игрока
@@ -64,7 +72,7 @@ public class Player {
         return y;
     }
 
-    public Bullet shoot(double mouseX, double mouseY, int weapon) {
+    public Bullet shoot(double mouseX, double mouseY) {
         double dx = mouseX - (x + 16);
         double dy = mouseY - (y + 16);
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -72,12 +80,7 @@ public class Player {
             dx /= distance;
             dy /= distance;
         }
-        if (weapon == 1) {
-            return new Bullet(x + 16, y + 16, dx, dy);
-        } else if (weapon == 2) {
-            return new Laser(x + 16, y + 16, mouseX, mouseY);
-        }
-        return null;
+        return new Bullet(x + 16, y + 16, dx, dy);
     }
 
     public void resetPosition(double x, double y) {
@@ -103,12 +106,28 @@ public class Player {
         return hp;
     }
 
-    public double getMaxHp() {
+    public int getMaxHp() {
         return maxHp;
     }
 
     public double getSpeed() {
         return speed;
+    }
+
+    public double getHpFactor() {
+        return hpFactor;
+    }
+
+    public double getSpeedFactor() {
+        return speedFactor;
+    }
+
+    public void setHpFactor(double hpFactor) {
+        this.hpFactor = hpFactor;
+    }
+
+    public void setSpeedFactor(double speedFactor) {
+        this.speedFactor = speedFactor;
     }
 
     public void gainExperience(double amount) {
@@ -121,9 +140,7 @@ public class Player {
     private void levelUp() {
         level++;
         experience -= nextLevelExperience;
-        nextLevelExperience += 100; // Увеличиваем опыт для следующего уровня
-        // Увеличиваем сложность врагов
-        Game.increaseEnemyDifficulty();
+        nextLevelExperience += 50; // Увеличиваем опыт для следующего уровня
         // Показываем улучшения для выбора игроком
         Game.showUpgrades(this);
     }
@@ -131,7 +148,9 @@ public class Player {
     public int getLevel() {
         return level;
     }
-
+    public void setLevel(int level) {
+        this.level = level;
+    }
     public int getExperience() {
         return experience;
     }
@@ -141,10 +160,12 @@ public class Player {
     }
 
     public void increaseSpeed(double increase) {
-        this.speed *= increase;
+        this.speedFactor += increase;
+        this.speed = baseSpeed * speedFactor;
     }
 
     public void increaseHealth(double increase) {
-        this.maxHp *= increase;
+        this.hpFactor += increase;
+        this.maxHp = (int) (baseHp * hpFactor);
     }
 }
